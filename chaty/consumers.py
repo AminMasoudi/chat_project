@@ -26,13 +26,11 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type':'chat_message',
                 'message' : message,
-                'sender' : self.user.__str__()
+                'sender' : self.user.__str__(),
+                'in': self.room_group_name
             }
+            
         )
-
-
-
-
 
     def chat_message(self, event):
         message = event['message']
@@ -41,3 +39,16 @@ class ChatConsumer(WebsocketConsumer):
             'type':'chat',
             'message' : message
         }))
+
+
+class DashboardConsumer(WebsocketConsumer):
+
+    def connect(self):
+        #TODO
+        pass
+
+
+    def receive(self, text_data=None, bytes_data=None):
+        #TODO
+        return super().receive(text_data, bytes_data)
+    

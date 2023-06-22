@@ -1,0 +1,48 @@
+
+{% extends "user/base.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+
+
+<div style="width: 350px; margin:0 auto ; border: 1px solid rgba(250, 229, 204, 0.757); border-radius: 4px; background-color: rgba(239, 227, 212, 0.637);" class="px-3">
+    <div class="upload-Form-Header">
+        <h2>Upload</h2>
+    </div>
+    <div class="upload_form" style="text-align:left ; height:40% ;">
+        <form action="/upload" method="post" id="img_upload_form" enctype = "multipart/form-data">
+            <div style="margin-bottom: 1rem;">
+                <div>
+                    <label for="name">Name</label>
+                </div>
+                <input type="text" name="name" placeholder="Optional" style="border: 1px solid #d3d9ce; border-radius: 3px; width: 70% ; height: 2rem;" >
+                
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <div style="margin-block-start:5px ;color: #151515; font-size: .688rem;">
+                    discribe
+                </div>
+                <textarea name="discribe" placeholder="Optional" style="border:1px solid #d3d9ce ;border-radius:3px ; margin-top: 3px;width: 70%;    height: 5rem; "></textarea>
+            </div>
+            <div style="margin-bottom: 1rem; color: #707070; font-size: .688rem;">
+                <p>If you want to stay anonymous do not write your name and delete metadata .</p>
+                <p>If you wonder how check <a href="https://www.comparitech.com/blog/information-security/remove-metadata-from-photos/">this</a> out.</p>
+            </div>
+            <div style="display:inline-flex ; margin-left: 3px; margin-bottom: 1rem;">
+                <input id="acceptRools" type="checkbox" style="margin-inline-end: 5px; border-radius: 3px; border-color: #454545;" required>
+                <div>
+                    <label for="acceptRools">I accept <a href="/rools">rools</a> </label>
+
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <input type="file" name="file" required>
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: .5rem; margin-bottom: .5rem;">send</button>
+        </form>
+        
+</div>
+{% endblock %}
