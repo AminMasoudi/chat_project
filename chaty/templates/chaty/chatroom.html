@@ -2,4 +2,30 @@
 
 {% block title %}chat room{% endblock %}
 
-{% block body %}{% endblock %}
+{% block main %}
+
+<div class="room-info-box">
+    <div class="room-name-box">
+        <h3>{{ room_name }}</h3>
+    </div>
+    <div class="room-info"></div>
+    <div class="user-info"></div>
+</div>
+
+
+<div class="massage-box">
+    <div class="massages" id="massages"></div>
+    <div class="mb-3 inputs">
+        <input class="form-control" type="text" name="massage" placeholder="Massage" id="massage">
+        <button type="button" name="send" id="send-btn" class="btn-primary btn" onclick="sendMassage()">Send</button>
+    </div>
+</div>
+
+
+<script>
+    function sendMassage() {
+        console.log("send")
+    }
+</script>
+
+{% endblock %}

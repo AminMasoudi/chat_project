@@ -8,41 +8,79 @@
 {% block main %}
 
 
-<div style="width: 350px; margin:0 auto ; border: 1px solid rgba(250, 229, 204, 0.757); border-radius: 4px; background-color: rgba(239, 227, 212, 0.637);" class="px-3">
-    <div class="upload-Form-Header">
-        <h2>Upload</h2>
+<form id="form">
+    <div class="mb-3">
+        <input name="username" class="form-control mx-auto w-auto" autocomplete="off" autofocus  name="username" placeholder="Username" type="text">
     </div>
-    <div class="upload_form" style="text-align:left ; height:40% ;">
-        <form action="/upload" method="post" id="img_upload_form" enctype = "multipart/form-data">
-            <div style="margin-bottom: 1rem;">
-                <div>
-                    <label for="name">Name</label>
-                </div>
-                <input type="text" name="name" placeholder="Optional" style="border: 1px solid #d3d9ce; border-radius: 3px; width: 70% ; height: 2rem;" >
-                
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <div style="margin-block-start:5px ;color: #151515; font-size: .688rem;">
-                    discribe
-                </div>
-                <textarea name="discribe" placeholder="Optional" style="border:1px solid #d3d9ce ;border-radius:3px ; margin-top: 3px;width: 70%;    height: 5rem; "></textarea>
-            </div>
-            <div style="margin-bottom: 1rem; color: #707070; font-size: .688rem;">
-                <p>If you want to stay anonymous do not write your name and delete metadata .</p>
-                <p>If you wonder how check <a href="https://www.comparitech.com/blog/information-security/remove-metadata-from-photos/">this</a> out.</p>
-            </div>
-            <div style="display:inline-flex ; margin-left: 3px; margin-bottom: 1rem;">
-                <input id="acceptRools" type="checkbox" style="margin-inline-end: 5px; border-radius: 3px; border-color: #454545;" required>
-                <div>
-                    <label for="acceptRools">I accept <a href="/rools">rools</a> </label>
 
-                </div>
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <input type="file" name="file" required>
-            </div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: .5rem; margin-bottom: .5rem;">send</button>
-        </form>
+    <div class="mb-3">
+        <input name="password" class="form-control mx-auto w-auto" autocomplete="off" autofocus  id="password" placeholder="password" type="password">
+    </div>
+
+    <div class="mb-3">
+        <input name="password2" class="form-control mx-auto w-auto" autocomplete="off" autofocus  id="password2" placeholder="password again" type="password">
+    </div>
+    
+    <button class="btn btn-primary" type="submit">Log In</button>
+</form>
+<script>
+    var m
+    document.addEventListener("DOMContentLoaded", (event)=>{
+    var csrftoken = '{{ csrf_token }}';
+    let api = '{{ register_api }}'
+    let wurl = window.location.host
+    console.log(wurl + api)
+    function Manual_Alert(msg) {
+        document.querySelector('header').innerHTML =`
+            <div class="alert alert-primary mb-0 text-center" role="alert">
+                ${msg}
+            </div>`        
+    }
+            
         
-</div>
+    function post_api(api_url, username, password) {
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+        };
+        return fetch(api_url, options)
+    }
+
+    let form = document.getElementById("form")
+    form.addEventListener("submit", (e)=>{
+        e.preventDefault()
+        let username = e.target.username.value
+        let password = e.target.password.value
+        let password2 = e.target.password2.value
+        if (password != password2){
+            Manual_Alert('check your password')
+        }else{
+            post_api(api, username, password)
+            .then(data =>{
+                if (!data.ok){
+                    throw Error(data.status);
+                }
+                return data.json();
+            }).then(update =>{
+                m = update
+                return m
+            })
+            .then(()=>{
+                if (m.status==='failed'){
+                    Manual_Alert(m.msg)
+                }else{
+                    window.location.href =  m.next
+                }
+            })
+        }
+    })
+})
+</script>
 {% endblock %}

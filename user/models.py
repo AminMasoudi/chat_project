@@ -1,14 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-from chaty.models import Group
+from chaty.models import Room
 # Create your models here.
 
 
 
 class UsersProfile(User):
     #TODO: 
-    #groups = models.ManyToManyField(Group,blank=True, related_name='members')
-    pass
-
-class Foo(models.Model):
-    ...
+    name = models.CharField(max_length=64, blank=True)
+    #TODO add through to rooms
+    rooms = models.ManyToManyField(Room,related_name="member")

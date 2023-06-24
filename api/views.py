@@ -1,5 +1,12 @@
 from rest_framework.response import Response
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from .list import *
+from user.models import UsersProfile
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['GET'])
@@ -9,14 +16,36 @@ def get_data(request):
 
 
 @api_view(["POST"])
-def auth(request):
+def new_user(request):
     #TODO auth 
-    ...
+    username_ = request.data["username"]
+    password_ = request.data["password"]
+    if (UsersProfile.objects.filter(username=username_)):
+        return Response({
+            "status" : "failed",
+            "msg" : "username exist"
+        })
+    user = UsersProfile.objects.create(username=username_, password=password_)
+    login(request, user)
+    return Response({
+        "status" : "success",
+        "msg": "",
+        "next": DASHBOARD
+    })
 
 @api_view(["POST"])
-def new_user(request):
-    #TODO
-    ...
+def sign_in(request):
+    username = request.data["username"]
+    password = request.data["password"]
+    user = authenticate(request, username=username, password=password,)
+    if user:
+        login(request, user)
+        return Response({
+            'user' : user.get_username(),
+            'status' : 'authenticated',
+            'next': DASHBOARD
+        })
+    return Response({'status':'failed'})
 
 
 @api_view(['GET'])

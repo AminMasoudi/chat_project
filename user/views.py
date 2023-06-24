@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from api.list import *
 from django.http import HttpResponseRedirect
-from .helpers import log_user_in, register_user
 from django.urls import reverse
 from django.contrib.auth import logout
 # Create your views here.
@@ -24,8 +23,8 @@ def dashboard(request):
 
 
 def sign_in(request):
-    if request.method == "POST":
-        return log_user_in(request)
+    if request.user.is_authenticated:
+        logout(request)
     
     return render(request, "user/sign_in.html", {
         "sign_in_api" : SIGN_IN,
@@ -36,15 +35,13 @@ def sign_in(request):
     
 def sign_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse("user:sign_in"))
+    return HttpResponseRedirect(reverse("user:index"))
 
 
 def register(request):
-    if request.method == "POST":
-        return register_user(request)
-
     if request.user.is_authenticated:
         logout(request)
+        
     return render(request, "user/register.html", {
         "register_api": REGISTER
     })
