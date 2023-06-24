@@ -6,7 +6,7 @@
 
 <div class="room-info-box">
     <div class="room-name-box">
-        <h3>{{ room_name }}</h3>
+        <h3>{{ room_pk }}</h3>
     </div>
     <div class="room-info"></div>
     <div class="user-info"></div>
@@ -23,9 +23,75 @@
 
 
 <script>
-    function sendMassage() {
-        console.log("send")
+    var message_array;
+    let ws_url = `ws://${window.location.host}/ws/socket-server/{{room_pk}}`
+    let message_api = `http://${window.location.host}/api/get_messages/` + '{{room_pk}}'
+    
+    function addToHtml(msg, name) {
+        let messages = document.getElementById("massages");
+        messages.insertAdjacentHTML("beforeend", 
+        `<div class="text">
+            <span>
+                <strong>${name}</strong>: ${msg}
+        </div>`
+        )}
+
+    const ChatServer = new WebSocket(ws_url)
+    let n;
+    ChatServer.onmessage = (e) => {
+        let data = JSON.parse(e.data);
+        if (data.type === "chat") {
+            addToHtml(data.message, data.sender)
+            n = data
+        }
     }
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+        fetch(message_api)
+        .then(data =>{
+            if (!data.ok){
+                throw Error(data.status);
+            }
+            return data.json();
+        }).then(value => {
+            message_array = value
+            message_array.forEach(message => {
+                addToHtml(message.content, message.origin)
+            });
+        })
+    })
+
+
+    function sendMassage() {
+        let message = document.getElementById("massage").value
+        if (message == "") return;
+        ChatServer.send(JSON.stringify({
+            "message":message
+        }))
+    }
+
+
+
+
+
+
+
+    /*TODO:
+        - [x] call api to get previous messages
+            - [x] save previous messages and serilize them 
+        - [ ] check api permissions in back-end 
+        - [x] get previous messages and websocket url
+        - [ ] maintain websocket to recv and send messages
+        - [ ] css
+    */
+
+
+
+
+
+
+
+
 </script>
 
 {% endblock %}

@@ -4,8 +4,8 @@ from asgiref.sync import async_to_sync
 from user.models import UsersProfile    
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        self.room_group_name = 'test'
-
+        self.room_group_name = self.scope['path'].split("/")[-1]
+        self.user = self.scope['user']
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name
@@ -20,13 +20,14 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        print(self.user.__str__())
+        print(self.scope['user'].username)
+
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type':'chat_message',
                 'message' : message,
-                'sender' : self.user.__str__(),
+                'sender' : self.scope['user'].username,
                 'in': self.room_group_name
             }
             
@@ -34,21 +35,18 @@ class ChatConsumer(WebsocketConsumer):
 
     def chat_message(self, event):
         message = event['message']
-
+        sender = event['sender']
         self.send(json.dumps({
             'type':'chat',
-            'message' : message
+            'message' : message,
+            'sender': sender
         }))
 
 
-class DashboardConsumer(WebsocketConsumer):
 
-    def connect(self):
-        #TODO
-        pass
+"""
+TODO : 
+- [ ] cleanning this mess
+- [ ] add new messages to db
 
-
-    def receive(self, text_data=None, bytes_data=None):
-        #TODO
-        return super().receive(text_data, bytes_data)
-    
+"""

@@ -4,13 +4,13 @@ from django.http import HttpResponseForbidden
 from user.models import UsersProfile, User
 
 def check_permission(view):
-    def wrapper(request,room_name):
-        r = Room.objects.filter(pk=room_name).first()
+    def wrapper(request,room_pk):
+        r = Room.objects.filter(pk=room_pk).first()
         if (not request.user.is_authenticated) or not r:
-            return HttpResponseForbidden({"msg" :"permission denied"})
+            return HttpResponseForbidden({"msg1" :"permission denied"})
         profile = UsersProfile.objects.get(username=request.user.username)
         if profile.rooms.filter(pk=r.id) :
-            return view(request, room_name)
+            return view(request, room_pk)
         return HttpResponseForbidden({"msg" :"permission denied"})
 
     return wrapper
@@ -24,7 +24,7 @@ def index(request):
 
 
 @check_permission
-def room(request, room_name):
+def room(request, room_pk):
     return render(request, "chaty/chatroom.html",{
-        "room_name" : room_name
+        "room_pk" : room_pk
     })

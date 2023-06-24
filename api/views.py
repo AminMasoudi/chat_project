@@ -5,9 +5,11 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .list import *
+from .serializers import MessageSerializer
 from user.models import UsersProfile
+from chaty.models import Room, Massage
 from django.shortcuts import get_object_or_404
-
+from rest_framework.renderers import JSONRenderer
 
 @api_view(['GET'])
 def get_data(request):
@@ -25,7 +27,7 @@ def new_user(request):
             "status" : "failed",
             "msg" : "username exist"
         })
-    user = UsersProfile.objects.create(username=username_, password=password_)
+    user = UsersProfile.objects.create_user(username=username_, password=password_)
     login(request, user)
     return Response({
         "status" : "success",
@@ -57,3 +59,14 @@ def example_view(request, format=None):
         'auth': str(request.auth),  # None
     }
     return Response(content)
+
+#TODO : permissions
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def get_message(request, room_pk):
+    room = Room.objects.get(pk=room_pk)
+    messages = room.massage.all()
+    ser_messages = MessageSerializer(messages, many=True)
+    return Response(ser_messages.data)
+

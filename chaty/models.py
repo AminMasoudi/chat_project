@@ -13,3 +13,6 @@ class Massage(models.Model):
     destination = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="massage")
     content = models.TextField(max_length=1024)
     time = models.TimeField(auto_now=True)
+
+    class Meta:
+           ordering = ['time'] 
