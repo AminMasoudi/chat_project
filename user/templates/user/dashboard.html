@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'user/styles.css' %}">
+
+    <title>Dashboard</title>
+</head>
+<body>
+
+    <div class="user-info" id="user"></div>
+    <div id="chats"></div>
+        
+    <script>
+        user_info_api = `http://${window.location.host}/api/get_user_info`;
+        user_chats_info_api = `http://${window.location.host}/api/get_chats_info`;
+
+        document.addEventListener("DOMContentLoaded", (event)=> {
+            fetch(user_info_api)
+            .then(data => {
+                if (!data.ok){
+                    throw Error (data.status);
+                }
+                return data.json();
+            }).then(value => {
+                let user_box = document.getElementById("user")
+                user_box.insertAdjacentHTML("beforeend",`
+                <div class="user-box">
+                    <h2>${value.username}</h2>
+                </div>
+                <div class="user-box">number of chats: ${value.rooms.length}</div>
+                <div class="user-box">${value.date_joined}</div>
+                `)
+            })
+            fetch(user_chats_info_api)
+            .then(data => {
+                if(!data.ok){
+                    throw Error(data.status);
+                }
+                return data.json()
+            }).then(value =>{
+                let chats = document.getElementById("chats") 
+                value.forEach(chat => {
+                    let p;
+                    if (chat.is_private) {
+                        p = "private"
+                    }else{
+                        p = "not Private"
+                    }
+                    chats.insertAdjacentHTML("afterbegin",`
+                    <a class="chat-link" href="http://${window.location.host}/chat/${chat.pk}">
+                        <div class="chat-box">
+                            <h2 class="chat-info">${chat.name}</h2>    
+                            <div class="chat-info pri">${p}</div>
+                        </div>
+                    </a>
+                    `)
+                });
+            })
+        })
+        
+        
+        
+    /*
+    TODO:
+        - [ ] call api to get user info
+        - [ ] call api to get chats data
+    */
+    </script>
+</body>
+</html> 

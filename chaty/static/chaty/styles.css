@@ -39,4 +39,17 @@ h2 {
 #send-btn {
   width: 8vw; }
 
+.text {
+  margin: 20px;
+  display: block ruby; }
+
+.msg-text {
+  border: 1px solid #00000020;
+  width: fit-content;
+  max-width: 30vw;
+  padding: 10px;
+  border-radius: 10px;
+  padding-inline: 20px;
+  padding-block: 5px; }
+
 /*# sourceMappingURL=styles.css.map */

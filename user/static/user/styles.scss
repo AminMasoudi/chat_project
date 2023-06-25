@@ -1,0 +1,62 @@
+$blue   : #537fbe;
+$red    : #ea433b;
+$yellow : #f5b82e;
+$green  : #2e944b;
+$border : 1px solid #00000020;
+$border-radius : 10px;
+$shadow : 0 2px 6px rgba(0, 0, 0, 0.15);
+
+
+nav{
+    .navbar-brand{
+        font-size: xx-large;
+        .blue{
+            color: $blue ;
+        }
+        .green{
+            color: $green;
+        }
+        .yellow{
+            color: $yellow;
+        }
+        .red{
+            color: $red;
+        }
+    }
+
+
+}
+
+.user-info{
+    border: $border;
+    border-radius: $border-radius;
+    margin-block: 1vh;
+    height: 7vh;
+    padding: 10px;
+    margin-inline: 3vw;
+    display: flex;
+}
+.chat-box{
+    border: $border;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+    margin-block: 1vh;
+    height: 7vh;
+    padding: 10px;
+    margin-inline: 3vw;
+    display: flex;
+}
+.user-box{
+    margin: auto;
+}
+.chat-info{margin: auto;}
+
+.pri{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+}
+.chat-link{
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.7);
+
+}

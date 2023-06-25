@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from .list import *
-from .serializers import MessageSerializer
+from .serializers import MessageSerializer, UserSerializer, RoomSerializer
 from user.models import UsersProfile
 from chaty.models import Room, Massage
 from django.shortcuts import get_object_or_404
@@ -19,7 +19,7 @@ def get_data(request):
 
 @api_view(["POST"])
 def new_user(request):
-    #TODO auth 
+
     username_ = request.data["username"]
     password_ = request.data["password"]
     if (UsersProfile.objects.filter(username=username_)):
@@ -60,7 +60,8 @@ def example_view(request, format=None):
     }
     return Response(content)
 
-#TODO : permissions
+
+#[ ] : permissions
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
@@ -68,5 +69,33 @@ def get_message(request, room_pk):
     room = Room.objects.get(pk=room_pk)
     messages = room.massage.all()
     ser_messages = MessageSerializer(messages, many=True)
+    for message in ser_messages.data:
+        message["origin"] = UsersProfile.objects.get(pk=message['origin']).username
+    print((ser_messages.data[0]['origin']))
     return Response(ser_messages.data)
 
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication]) #why??
+@permission_classes([IsAuthenticated])
+def get_user_info(request):
+    user = UsersProfile.get_profile(request)
+    ser_user = UserSerializer(user)
+    return Response(ser_user.data)
+
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication]) #why??
+@permission_classes([IsAuthenticated])
+def get_user_chats_info(request):
+    rooms = UsersProfile.get_profile((request)).rooms
+    ser_room = RoomSerializer(rooms, many=True)
+    return Response(ser_room.data)
+
+
+
+
+
+"""TODO
+- [ ] permissions and auth
+- [ ] cleaning
+
+"""

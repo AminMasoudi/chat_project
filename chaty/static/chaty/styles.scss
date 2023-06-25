@@ -15,7 +15,7 @@ $shadow : 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .massages{
-    overflow-y: scroll;
+    overflow-y: scroll ;
     flex: 1;
     width: 100%;
 }
@@ -49,4 +49,21 @@ h2{
 
 #send-btn{
     width: 8vw;
+}
+
+.text{
+    margin: 20px;
+    display: block ruby;
+    
+}
+.msg-text{
+border: $border;
+width: fit-content;
+max-width: 30vw;
+padding: 10px;
+border-radius: $border-radius;
+padding-inline: 20px;
+padding-block: 5px;
+
+
 }

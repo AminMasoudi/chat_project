@@ -16,7 +16,7 @@
 <div class="massage-box">
     <div class="massages" id="massages"></div>
     <div class="mb-3 inputs">
-        <input class="form-control" type="text" name="massage" placeholder="Massage" id="massage">
+        <input class="form-control" type="text" name="massage" autofocus placeholder="Massage" id="massage">
         <button type="button" name="send" id="send-btn" class="btn-primary btn" onclick="sendMassage()">Send</button>
     </div>
 </div>
@@ -32,7 +32,7 @@
         messages.insertAdjacentHTML("beforeend", 
         `<div class="text">
             <span>
-                <strong>${name}</strong>: ${msg}
+                <strong>${name}</strong>: <div class="msg-text">${msg}</div>
         </div>`
         )}
 
@@ -78,11 +78,12 @@
 
     /*TODO:
         - [x] call api to get previous messages
-            - [x] save previous messages and serilize them 
-        - [ ] check api permissions in back-end 
+        - [x] save previous messages and serilize them 
         - [x] get previous messages and websocket url
-        - [ ] maintain websocket to recv and send messages
+        - [x] maintain websocket to recv and send messages
+        - [ ] check api permissions in back-end 
         - [ ] css
+        - [ ] add room info
     */
 
 

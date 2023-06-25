@@ -6,6 +6,7 @@ class Room(models.Model):
     name = models.CharField(max_length=64, unique=True, auto_created=True)
     is_private = models.BooleanField(default=True)
 
+
 from user.models import UsersProfile
 
 class Massage(models.Model):
@@ -15,4 +16,13 @@ class Massage(models.Model):
     time = models.TimeField(auto_now=True)
 
     class Meta:
-           ordering = ['time'] 
+           ordering = ['time']
+
+
+
+
+""" 
+TODO
+- [ ] chat and group
+
+"""
