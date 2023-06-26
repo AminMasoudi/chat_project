@@ -10,14 +10,17 @@
 
     <title>Dashboard</title>
 </head>
-<body>
+<body class="w-body">
 
     <div class="user-info" id="user"></div>
-    <div id="chats"></div>
+    <div id="pri_chats"></div>
+    <hr id="hr" hidden></hr>
+    <div id="pub_chats"></div>
         
     <script>
         user_info_api = `http://${window.location.host}/api/get_user_info`;
-        user_chats_info_api = `http://${window.location.host}/api/get_chats_info`;
+        user_private_chats = `http://${window.location.host}/api/get_chats_info`;
+        public_chats = `http://${window.location.host}/api/public_chats`;
 
         document.addEventListener("DOMContentLoaded", (event)=> {
             fetch(user_info_api)
@@ -36,14 +39,15 @@
                 <div class="user-box">${value.date_joined}</div>
                 `)
             })
-            fetch(user_chats_info_api)
+            
+            fetch(user_private_chats)
             .then(data => {
                 if(!data.ok){
                     throw Error(data.status);
                 }
                 return data.json()
             }).then(value =>{
-                let chats = document.getElementById("chats") 
+                let chats = document.getElementById("pri_chats") 
                 value.forEach(chat => {
                     let p;
                     if (chat.is_private) {
@@ -59,8 +63,38 @@
                         </div>
                     </a>
                     `)
-                });
+                }
+                );
             })
+            document.getElementById("hr").hidden = false
+
+            fetch(public_chats)
+            .then( data => {
+                if (!data.ok){
+                    throw Error(data.status)
+                }
+                return data.json();
+            }).then( value => {
+                let chats = document.getElementById("pub_chats") 
+                value.forEach(chat => {
+                    let p;
+                    if (chat.is_private) {
+                        p = "private"
+                    }else{
+                        p = "not Private"
+                    }
+                    chats.insertAdjacentHTML("afterbegin",`
+                    <a class="chat-link" href="http://${window.location.host}/chat/${chat.pk}">
+                        <div class="chat-box">
+                            <h2 class="chat-info">${chat.name}</h2>    
+                            <div class="chat-info pri">${p}</div>
+                        </div>
+                    </a>
+                    `)
+                }
+                );
+            })
+            
         })
         
         

@@ -9,9 +9,7 @@ class UsersProfile(User):
     name = models.CharField(max_length=64, blank=True)
     #TODO add through to rooms
     rooms = models.ManyToManyField(Room,related_name="member")
+    
     def get_profile(request):
         if request.user.is_authenticated:
             return UsersProfile.objects.get(pk=request.user.pk)
-
-
-            

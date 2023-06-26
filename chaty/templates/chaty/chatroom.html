@@ -59,11 +59,17 @@
                 addToHtml(message.content, message.origin)
             });
         })
+
+        let button = document.getElementById("send-btn")
+        // button.addEventListener("keydown", sen)
+        // button.onsubmit("keydown") = sendMassage()
     })
 
 
+
     function sendMassage() {
-        let message = document.getElementById("massage").value
+        let message_box = document.getElementById("massage")
+        let message = message_box.value
         if (message == "") return;
         ChatServer.send(JSON.stringify({
             "message":message

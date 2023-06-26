@@ -45,6 +45,7 @@ nav{
     padding: 10px;
     margin-inline: 3vw;
     display: flex;
+    background-color: #efefef;
 }
 .user-box{
     margin: auto;
@@ -59,4 +60,12 @@ nav{
     text-decoration: none;
     color: rgba(0, 0, 0, 0.7);
 
+}
+
+hr{
+    margin-inline: 10%;
+    color: rgba(0, 0, 0, 0.15);
+}
+.w-body{
+    background-color: #e9e9e9;
 }

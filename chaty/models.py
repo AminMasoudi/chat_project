@@ -6,6 +6,20 @@ class Room(models.Model):
     name = models.CharField(max_length=64, unique=True, auto_created=True)
     is_private = models.BooleanField(default=True)
 
+    def publics():
+        return Room.objects.filter(is_private=False).all()
+
+    def have_permission(self, user):
+        if (not self.is_private) or (self in user.rooms.all()):
+            return True
+        return False
+    
+    def is_valid(self, pk):
+        if Room.objects.filter(pk=pk):
+            return True
+        return False
+         
+
 
 from user.models import UsersProfile
 
@@ -14,9 +28,6 @@ class Massage(models.Model):
     destination = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="massage")
     content = models.TextField(max_length=1024)
     time = models.TimeField(auto_now=True)
-
-    class Meta:
-           ordering = ['time']
 
 
 
