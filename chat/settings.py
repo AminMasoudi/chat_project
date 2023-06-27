@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-i4w@e$7ixa)%e3-m!m+0yg7)5w0tqk$i5h5-yu)gu7cn6eg045
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 from socket import gethostbyname, gethostname
-ALLOWED_HOSTS = [gethostbyname(gethostname())]
+ALLOWED_HOSTS = [gethostbyname(gethostname()),"127.0.0.1"]
 
 # Application definition
 
@@ -145,4 +145,45 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ]
+}
+
+
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers":False,
+
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} : {message}",
+            "style": "{"
+        }
+    },
+    
+    "handlers":{
+        "debug_logs":{
+            "level":"DEBUG",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/DEBUG.log",
+            "formatter": "simple"
+        },
+        "warnings_log":{
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/WARNING.log",
+            "formatter": "verbose"
+        },
+    },
+    "loggers":{
+        "":{
+            "level": 'DEBUG',
+            "handlers":["warnings_log",'debug_logs'],
+        },
+
+    }
 }

@@ -3,9 +3,10 @@
 
 ### TODO
 
-- [ ] favicon
+- [ ] add button to build a room 
+- [ ] logger
 - [ ] change massage to message
-- [ ] 403 and 401 redirect
-- [ ] check request permissions on api.views.get_messages() from rest_framework.permissions
-- [ ] add api to get room info 
-- [ ] cyrcular import
+- [ ] 403 and 401 redirect pages
+- [x] check request permissions on api.views.get_messages() from rest_framework.permissions
+- [x] add api to get room info 
+- [ ] favicon
