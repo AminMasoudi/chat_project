@@ -89,7 +89,7 @@ def public_chats(request):
 @permission_classes([IsAuthenticated])
 def get_message(request, room_pk):
     room        = Room.objects.get(pk=room_pk)
-    messages    = room.massage.order_by("time").reverse()
+    messages    = room.massage.order_by("time")
     ser_messages= MessageSerializer(messages, many=True)
 
     for message in ser_messages.data:

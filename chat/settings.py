@@ -169,13 +169,13 @@ LOGGING = {
         "debug_logs":{
             "level":"DEBUG",
             "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs/DEBUG.log",
+            "filename": BASE_DIR / "DEBUG.log",
             "formatter": "simple"
         },
         "warnings_log":{
             "level": "WARNING",
             "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs/WARNING.log",
+            "filename": BASE_DIR / "WARNING.log",
             "formatter": "verbose"
         },
     },
