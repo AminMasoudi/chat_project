@@ -21,13 +21,19 @@ def register(request):
 
     username = request.data["username"]
     password = request.data["password"]
+
     if (UsersProfile.objects.filter(username=username)):
+        
         return Response({
-            "status" : "failed",
-            "msg" : "username exist"
+            "status": "failed",
+            "msg"   : "username exist"
         })
+    
+
     user = UsersProfile.objects.create_user(username=username, password=password)
+    
     login(request, user)
+    
     return Response({
         "status" : "success",
         "msg": "",
@@ -40,26 +46,40 @@ def register(request):
 def sign_in(request):
     username = request.data["username"]
     password = request.data["password"]
+    
     user = authenticate(request, username=username, password=password,)
+    
     if user:
         login(request, user)
+    
         return Response({
-            'user' : user.get_username(),
-            'status' : 'authenticated',
-            'next': DASHBOARD
+            'user'  : user.get_username(),
+            'status': 'authenticated',
+            'next'  : DASHBOARD
         })
+    
+    
     return Response({'status':'failed'})
 
 
 
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication])
-@permission_classes([IsAuthenticated])
-def example_view(request, format=None):
-    user = UsersProfile.get_profile(request)
-    rooms = user.rooms.all()
-    ser = UserSerializer(user)
-    return Response("1" in ser.data["rooms"])
+
+@api_view(["GET"])
+def public_chats(request):
+    rooms   = Room.objects.filter(is_private=False).all()
+    ser_room= RoomSerializer(rooms, many=True)
+    return Response(ser_room.data)
+
+
+
+# @api_view(['GET'])
+# @authentication_classes([SessionAuthentication])
+# @permission_classes([IsAuthenticated])
+# def example_view(request, format=None):
+#     user    = UsersProfile.get_profile(request)
+#     rooms   = user.rooms.all()
+#     ser     = UserSerializer(user)
+#     return Response("1" in ser.data["rooms"])
 
 
 #[ ] : permissions
@@ -68,36 +88,39 @@ def example_view(request, format=None):
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
 def get_message(request, room_pk):
-    room = Room.objects.get(pk=room_pk)
-    messages = room.massage.order_by("time").reverse()
-    ser_messages = MessageSerializer(messages, many=True)
+    room        = Room.objects.get(pk=room_pk)
+    messages    = room.massage.order_by("time").reverse()
+    ser_messages= MessageSerializer(messages, many=True)
+
     for message in ser_messages.data:
         message["origin"] = UsersProfile.objects.get(pk=message['origin']).username
-    print((ser_messages.data[0]['origin']))
+
     return Response(ser_messages.data)
+
+
 
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication]) #why??
 @permission_classes([IsAuthenticated])
 def get_user_info(request):
-    user = UsersProfile.get_profile(request)
+    user     = UsersProfile.get_profile(request)
     ser_user = UserSerializer(user)
     return Response(ser_user.data)
+
+
+
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication]) #why??
 @permission_classes([IsAuthenticated])
 def get_user_private_chats(request):
-    rooms = UsersProfile.get_profile((request)).rooms
-    ser_room = RoomSerializer(rooms, many=True)
+    
+    rooms   = UsersProfile.get_profile((request)).rooms
+    ser_room= RoomSerializer(rooms, many=True)
+
     return Response(ser_room.data)
 
-@api_view(["GET"])
-def public_chats(request):
-    rooms = Room.objects.filter(is_private=False).all()
-    ser_room = RoomSerializer(rooms, many=True)
-    return Response(ser_room.data)
 
 
 
