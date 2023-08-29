@@ -4,6 +4,7 @@ APPS = [
     # internal apps
     'core.apps.CoreConfig',
     'web.apps.CoreConfig',
+    'api.apps.CoreConfig',
     ]
 FRAMEWORKS = [
     # frameworks
