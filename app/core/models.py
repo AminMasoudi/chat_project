@@ -3,33 +3,73 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
-class UserManager(BaseUserManager):
-    def create_user(self, email, password, **extra):
-        user = self.model(email=self.normalize_email(email), **extra) 
-        user.set_password(password)
-        user.save()
-        return user
-    
-    def create_superuser(self, email, password,**extra):
-        user = self.create_user(email=email, password=password, **extra)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
-        return user
     
 class User(AbstractUser, PermissionsMixin):
     ...
-    chats = models.ManyToManyField("core.Chat", verbose_name=_("Users Chat"), related_name="members")
 
 
-class Chat(models.Model):
-
-    name = models.CharField(_("Chat Name"), max_length=50)
-    
+class BaseModel(models.Model):
+    create_date     = models.DateTimeField(_("Creation Date"), auto_now_add=True)
+    updated_date    = models.DateTimeField(_("Update Date"), auto_now=True)
 
     class Meta:
-        verbose_name = _("chat")
-        verbose_name_plural = _("chats")
+        abstract = True
 
-    def __str__(self):
-        return self.name
+
+class GroupChat(BaseModel):
+
+    name = models.CharField(_("Chat Name"), max_length=50)
+    users = models.ManyToManyField("core.User",
+                                   verbose_name=_("Users"),
+                                   related_name="group_chats")
+
+
+    class Meta:
+        verbose_name = _("Group chat")
+        verbose_name_plural = _("Group chats")
+
+
+    
+class PersonalChat(BaseModel):
+    users = models.ManyToManyField("core.User",
+                                   verbose_name=_("Users"),
+                                   related_name="pvs")
+    
+    class Meta:
+        verbose_name = _("Personal chat")
+        verbose_name_plural = _("Personal chats")
+
+
+
+class BaseMessage(BaseModel):
+    text = models.TextField(_("Text Message"))
+    
+    sender = models.ForeignKey("core.User",
+                               on_delete=models.DO_NOTHING,
+                               related_name="messages")
+    
+    class Meta:
+        abstract = True
+
+
+class PersonalMessage(BaseMessage):
+
+    chat = models.ForeignKey("core.PersonalChat",
+                             on_delete=models.CASCADE,
+                             related_name="messages")    
+
+    class Meta:
+        verbose_name = _("Personal Message")
+        verbose_name_plural = _("Personal Messages")
+
+
+class GroupMessage(models.Model):
+
+    chat = models.ForeignKey("core.GroupChat",
+                             on_delete=models.CASCADE,
+                             related_name="messages")    
+
+
+    class Meta:
+        verbose_name = _("Group message")
+        verbose_name_plural = _("Group messages")
