@@ -38,3 +38,38 @@ class PersonalChat(BaseModel):
     class Meta:
         verbose_name = _("Personal chat")
         verbose_name_plural = _("Personal chats")
+
+
+
+class BaseMessage(BaseModel):
+    text = models.TextField(_("Text Message"))
+    
+    sender = models.ForeignKey("core.User",
+                               on_delete=models.DO_NOTHING,
+                               related_name="messages")
+    
+    class Meta:
+        abstract = True
+
+
+class PersonalMessage(BaseMessage):
+
+    chat = models.ForeignKey("core.PersonalChat",
+                             on_delete=models.CASCADE,
+                             related_name="messages")    
+
+    class Meta:
+        verbose_name = _("Personal Message")
+        verbose_name_plural = _("Personal Messages")
+
+
+class GroupMessage(models.Model):
+
+    chat = models.ForeignKey("core.GroupChat",
+                             on_delete=models.CASCADE,
+                             related_name="messages")    
+
+
+    class Meta:
+        verbose_name = _("Group message")
+        verbose_name_plural = _("Group messages")
