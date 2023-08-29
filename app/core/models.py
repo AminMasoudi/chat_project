@@ -8,3 +8,10 @@ class User(AbstractUser, PermissionsMixin):
     ...
 
 
+class BaseModel(models.Model):
+    create_date     = models.DateTimeField(_("Creation Date"), auto_now_add=True)
+    updated_date    = models.DateTimeField(_("Update Date"), auto_now=True)
+
+    class Meta:
+        abstract = True
+
