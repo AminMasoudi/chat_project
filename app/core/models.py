@@ -15,3 +15,26 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
+class GroupChat(BaseModel):
+
+    name = models.CharField(_("Chat Name"), max_length=50)
+    users = models.ManyToManyField("core.User",
+                                   verbose_name=_("Users"),
+                                   related_name="group_chats")
+
+
+    class Meta:
+        verbose_name = _("Group chat")
+        verbose_name_plural = _("Group chats")
+
+
+    
+class PersonalChat(BaseModel):
+    users = models.ManyToManyField("core.User",
+                                   verbose_name=_("Users"),
+                                   related_name="pvs")
+    
+    class Meta:
+        verbose_name = _("Personal chat")
+        verbose_name_plural = _("Personal chats")
