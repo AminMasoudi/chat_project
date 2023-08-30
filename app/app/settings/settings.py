@@ -3,7 +3,7 @@ from .base import *
 APPS = [
     # internal apps
     'core.apps.CoreConfig',
-    'web.apps.CoreConfig',
+    'web.apps.WebConfig',
     ]
 FRAMEWORKS = [
     # frameworks
