@@ -5,5 +5,6 @@ app_name = "web"
 
 urlpatterns = [
     path("", others.IndexView.as_view(), name="index"),
-    path("auth/", auth.AuthView.as_view(), name="auth")
+    path("auth/sign_in", auth.SignInView.as_view(), name="sign_in"),
+    path("auth/register", auth.RegisterView.as_view(), name="register"),
 ]
