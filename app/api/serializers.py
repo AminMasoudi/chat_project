@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 
 from core.models import User
 class UserSerializer(serializers.Serializer):
@@ -11,8 +11,7 @@ class UserSerializer(serializers.Serializer):
         return User.objects.create_user(**validated_data)
         
     def validate_username(self, username):
+        if User.objects.filter(username=username).first():
+            raise exceptions.AuthenticationFailed("username exist")
         return username
     
-    def is_valid(self, *, raise_exception=False):
-        return super().is_valid(raise_exception=raise_exception)
-        
