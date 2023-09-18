@@ -10,3 +10,20 @@ from rest_framework.response import Response
 from api import serializers
 
 
+class RegisterViewSet(viewsets.ViewSet,
+                  GenericAPIView):
+    
+    serializer_class = serializers.UserSerializer
+
+    @action(methods=["POST"], detail=False)
+    def register(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(
+            data=serializer.data,
+            status=status.HTTP_201_CREATED
+        )
+            
+    def perform_create(self, serializer):
+        serializer.save()
