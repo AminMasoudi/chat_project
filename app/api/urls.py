@@ -6,7 +6,7 @@ from api.views import auth
 
 router = DefaultRouter()
 router.register("auth",
-                auth.RegisterViewSet,
+                auth.AuthViewSet,
                 "auth")
 
 

@@ -10,10 +10,20 @@ from rest_framework.response import Response
 from api import serializers
 
 
-class RegisterViewSet(viewsets.ViewSet,
-                  GenericAPIView):
-    
+class BaseAuth:
+
     serializer_class = serializers.UserSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+
+class AuthViewSet(
+    BaseAuth,
+    viewsets.ViewSet,
+    GenericAPIView,
+                  ):
+    
 
     @action(methods=["POST"], detail=False)
     def register(self, request):
@@ -24,6 +34,5 @@ class RegisterViewSet(viewsets.ViewSet,
             data=serializer.data,
             status=status.HTTP_201_CREATED
         )
-            
-    def perform_create(self, serializer):
-        serializer.save()
+        
+    
