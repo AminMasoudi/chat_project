@@ -1,5 +1,6 @@
 # Chat Project
+## WARRNING : Under construction
 
-### you can chat in this web app
+### you will be able to chat with this web app :))
 
 In this repo you can run a chat web application that uses django for backend.
